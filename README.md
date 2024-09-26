@@ -153,16 +153,8 @@ ldp_cand_speeches <- bind_rows(ldp_cand_data) %>%
   mutate(speaker_position=ifelse(speaker_position=="",NA,speaker_position),
          speaker_role=ifelse(speaker_role=="",NA,speaker_role))
 
-first_speech_date <- ldp_cand_speeches %>% 
-  group_by(speaker) %>% 
-  summarize(min_date = min(date)) %>% 
-  distinct(speaker,min_date)
-
-ldp_cand_speeches %>% group_by(speaker) %>% summarize(n=n()) %>% left_join(ldp_cand_speeches %>% distinct(speaker,number_of_records)) %>% mutate(dif=n-as.double(number_of_records)) %>% arrange(dif) %>% view()
-
-
-
-ldp_cand_history <- ldp_cand_speeches %>% 
+# グラフにする
+ldp_cand_speeches %>% 
   filter(speaker != "小林芳正") %>%  # 名寄せの失敗で混入していた海難審判庁の人を除去
   distinct(speaker, speaker_position, speaker_role, session, name_of_house, name_of_meeting, date) %>%
   group_by(speaker, date) %>%
